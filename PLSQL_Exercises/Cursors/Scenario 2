@@ -1,0 +1,23 @@
+DECLARE
+
+    CURSOR ApplyAnnualFee IS
+        SELECT AccountID
+        FROM Accounts;
+
+BEGIN
+
+    FOR acc_rec IN ApplyAnnualFee LOOP
+
+        UPDATE Accounts
+        SET Balance = Balance - 500
+        WHERE AccountID = acc_rec.AccountID;
+
+    END LOOP;
+
+    COMMIT;
+
+    DBMS_OUTPUT.PUT_LINE(
+        'Annual Fee Applied Successfully');
+
+END;
+/

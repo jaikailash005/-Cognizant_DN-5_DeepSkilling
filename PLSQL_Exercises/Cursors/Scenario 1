@@ -1,0 +1,30 @@
+DECLARE
+
+    CURSOR GenerateMonthlyStatements IS
+        SELECT CustomerID,
+               TransactionID,
+               Amount,
+               TransactionDate
+        FROM Transactions
+        WHERE EXTRACT(MONTH FROM TransactionDate) =
+              EXTRACT(MONTH FROM SYSDATE);
+
+BEGIN
+
+    FOR trans_rec IN GenerateMonthlyStatements LOOP
+
+        DBMS_OUTPUT.PUT_LINE(
+            'Customer ID : ' ||
+            trans_rec.CustomerID ||
+            ' Transaction ID : ' ||
+            trans_rec.TransactionID ||
+            ' Amount : ' ||
+            trans_rec.Amount ||
+            ' Date : ' ||
+            trans_rec.TransactionDate
+        );
+
+    END LOOP;
+
+END;
+/

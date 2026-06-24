@@ -1,0 +1,94 @@
+CREATE OR REPLACE PACKAGE EmployeeManagement AS
+
+    PROCEDURE HireEmployee(
+        p_empid NUMBER,
+        p_name VARCHAR2,
+        p_salary NUMBER
+    );
+
+    PROCEDURE UpdateEmployee(
+        p_empid NUMBER,
+        p_salary NUMBER
+    );
+
+    FUNCTION CalculateAnnualSalary(
+        p_empid NUMBER
+    ) RETURN NUMBER;
+
+END EmployeeManagement;
+/
+
+CREATE OR REPLACE PACKAGE BODY EmployeeManagement AS
+
+    PROCEDURE HireEmployee(
+        p_empid NUMBER,
+        p_name VARCHAR2,
+        p_salary NUMBER
+    )
+    IS
+    BEGIN
+        INSERT INTO Employees
+        VALUES (
+            p_empid,
+            p_name,
+            p_salary
+        );
+    END;
+
+    PROCEDURE UpdateEmployee(
+        p_empid NUMBER,
+        p_salary NUMBER
+    )
+    IS
+    BEGIN
+        UPDATE Employees
+        SET Salary = p_salary
+        WHERE EmployeeID = p_empid;
+    END;
+
+    FUNCTION CalculateAnnualSalary(
+        p_empid NUMBER
+    )
+    RETURN NUMBER
+    IS
+        v_salary NUMBER;
+    BEGIN
+
+        SELECT Salary
+        INTO v_salary
+        FROM Employees
+        WHERE EmployeeID = p_empid;
+
+        RETURN v_salary * 12;
+
+    END;
+
+END EmployeeManagement;
+/
+
+DECLARE
+    v_annual NUMBER;
+BEGIN
+
+    EmployeeManagement.HireEmployee(
+        201,
+        'Raj',
+        30000
+    );
+
+    EmployeeManagement.UpdateEmployee(
+        201,
+        35000
+    );
+
+    v_annual :=
+        EmployeeManagement.CalculateAnnualSalary(
+            201
+        );
+
+    DBMS_OUTPUT.PUT_LINE(
+        'Annual Salary = ' || v_annual
+    );
+
+END;
+/
