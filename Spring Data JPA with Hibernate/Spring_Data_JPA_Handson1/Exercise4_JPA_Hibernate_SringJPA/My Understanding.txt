@@ -1,0 +1,216 @@
+# Difference Between JPA, Hibernate and Spring Data JPA
+
+## 1. Java Persistence API (JPA)
+
+From what I understood,
+
+* JPA (Java Persistence API) is a **specification** for connecting Java applications with relational databases.
+* It only defines **rules and standards** for performing database operations.
+* JPA itself cannot perform database operations because it does not contain any implementation.
+* To use JPA, we need an implementation like **Hibernate**.
+
+### Advantages
+
+* Standard way of performing ORM.
+* Database independent.
+* Makes applications portable.
+* Easy to switch between different JPA implementations.
+
+### Example
+
+```java
+@Entity
+public class Employee {
+
+    @Id
+    private int id;
+
+    private String name;
+}
+```
+
+---
+
+# 2. Hibernate
+
+From what I understood,
+
+* Hibernate is an **ORM framework**.
+* Hibernate implements the JPA specification.
+* It converts Java objects into database tables and database records into Java objects.
+* It removes the need to write most JDBC code manually.
+* Hibernate provides SessionFactory, Session, Transaction, HQL and many other features.
+
+### Advantages
+
+* Reduces JDBC code.
+* Automatically generates SQL.
+* Supports caching.
+* Open source.
+* Works with different databases.
+
+### Example
+
+```java
+Session session = factory.openSession();
+
+Transaction tx = session.beginTransaction();
+
+session.save(employee);
+
+tx.commit();
+
+session.close();
+```
+
+Here we manually create a Session, begin a Transaction, save the object and commit the transaction.
+
+---
+
+# 3. Spring Data JPA
+
+From what I understood,
+
+* Spring Data JPA is **not another ORM framework**.
+* It is built on top of JPA implementations like Hibernate.
+* It makes database programming much easier by removing boilerplate code.
+* It automatically provides CRUD operations through `JpaRepository`.
+* It also manages transactions using `@Transactional`.
+
+### Advantages
+
+* Less coding.
+* Easy to understand.
+* Automatic CRUD operations.
+* Faster application development.
+* Easy integration with Spring Boot.
+
+### Example
+
+```java
+public interface EmployeeRepository
+        extends JpaRepository<Employee, Integer> {
+
+}
+```
+
+```java
+@Service
+public class EmployeeService {
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Transactional
+    public void addEmployee(Employee employee) {
+
+        employeeRepository.save(employee);
+
+    }
+}
+```
+
+Here we simply call `save()` instead of writing Session, Transaction and Commit manually.
+
+---
+
+# Comparison
+
+## JPA
+
+* It is a Specification.
+* It only defines rules.
+* It has no implementation.
+* It cannot work alone.
+
+## Hibernate
+
+* It is an ORM Framework.
+* It implements JPA.
+* It performs actual database operations.
+* It provides Session and Transaction.
+
+## Spring Data JPA
+
+* It is an abstraction over Hibernate.
+* It reduces boilerplate code.
+* It automatically creates CRUD methods.
+* It makes development much easier.
+
+---
+
+# Hibernate vs Spring Data JPA
+
+### Hibernate
+
+```java
+Session session = factory.openSession();
+
+Transaction tx = session.beginTransaction();
+
+session.save(employee);
+
+tx.commit();
+
+session.close();
+```
+
+Here we manually handle Session, Transaction and Commit.
+
+### Spring Data JPA
+
+```java
+employeeRepository.save(employee);
+```
+
+Here Spring automatically handles everything internally.
+
+---
+
+# Comparison Table
+
+| JPA               | Hibernate              | Spring Data JPA             |
+| ----------------- | ---------------------- | --------------------------- |
+| Specification     | Framework              | Abstraction Layer           |
+| Defines Rules     | Implements JPA         | Uses Hibernate              |
+| No Implementation | ORM Tool               | Simplifies ORM              |
+| Cannot work alone | Can work independently | Requires JPA implementation |
+| Standard API      | Provides ORM features  | Reduces boilerplate code    |
+
+---
+
+# Architecture
+
+```
+Application
+      │
+      ▼
+Spring Data JPA
+      │
+      ▼
+Hibernate
+      │
+      ▼
+JPA
+      │
+      ▼
+Database
+```
+
+---
+
+# Conclusion
+
+From this handson, I understood that:
+
+* **JPA** only defines the rules for ORM.
+* **Hibernate** implements those rules and performs the actual database operations.
+* **Spring Data JPA** makes Hibernate easier to use by reducing boilerplate code and automatically handling common database operations like CRUD and transactions.
+
+Therefore,
+
+**JPA = Rules**
+
+**Hibernate = Implementation**
+
+**Spring Data JPA = Simplified way of using Hibernate**
