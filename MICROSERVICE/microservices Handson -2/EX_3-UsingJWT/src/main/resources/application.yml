@@ -1,0 +1,7 @@
+spring:
+  security:
+    jwt:
+      secret: mySecretKey123456789012345678901234567890
+
+server:
+  port: 8083

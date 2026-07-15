@@ -1,0 +1,25 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          my-client:
+            provider: my-provider
+            client-id:  78326139434-a6s3051mau54l35l2mr9g1girtd5ji4b.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - openid
+              - profile
+              - email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+        provider:
+          my-provider:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
+server:
+  port: 8081
